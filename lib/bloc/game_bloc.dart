@@ -21,18 +21,34 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   }
 
   void _onSwipedUp(SwipedUp event, Emitter<GameState> emit) {
-    emit(GameRunning(state.gameBoard.swipe(Direction.up).addTwo()));
+    GameBoard newBoard = state.gameBoard.swipe(Direction.up);
+    if (newBoard != state.gameBoard) {
+      newBoard = newBoard.addTwo();
+    }
+    emit(GameRunning(newBoard));
   }
 
   void _onSwipedDown(SwipedDown event, Emitter<GameState> emit) {
-    emit(GameRunning(state.gameBoard.swipe(Direction.down).addTwo()));
+    GameBoard newBoard = state.gameBoard.swipe(Direction.down);
+    if (newBoard != state.gameBoard) {
+      newBoard = newBoard.addTwo();
+    }
+    emit(GameRunning(newBoard));
   }
 
   void _onSwipedRight(SwipedRight event, Emitter<GameState> emit) {
-    emit(GameRunning(state.gameBoard.swipe(Direction.right).addTwo()));
+    GameBoard newBoard = state.gameBoard.swipe(Direction.right);
+    if (newBoard != state.gameBoard) {
+      newBoard = newBoard.addTwo();
+    }
+    emit(GameRunning(newBoard));
   }
 
   void _onSwipedLeft(SwipedLeft event, Emitter<GameState> emit) {
-    emit(GameRunning(state.gameBoard.swipe(Direction.left).addTwo()));
+    GameBoard newBoard = state.gameBoard.swipe(Direction.left);
+    if (newBoard != state.gameBoard) {
+      newBoard = newBoard.addTwo();
+    }
+    emit(GameRunning(newBoard));
   }
 }
