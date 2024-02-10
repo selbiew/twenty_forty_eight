@@ -39,18 +39,42 @@ class TwentyFortyEightBoardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Card(
-          child: SizedBox(
-            height: 348,
-            width: 348,
-            child: TileGrid(),
+    return GestureDetector(
+      onHorizontalDragEnd: (details) => {
+        if (details.primaryVelocity != null && details.primaryVelocity! > 0.0)
+          {
+            context.read<GameBloc>().add(const SwipedRight()),
+          }
+        else if (details.primaryVelocity != null &&
+            details.primaryVelocity! < 0.0)
+          {
+            context.read<GameBloc>().add(const SwipedLeft()),
+          }
+      },
+      onVerticalDragEnd: (details) => {
+        if (details.primaryVelocity != null && details.primaryVelocity! > 0.0)
+          {
+            context.read<GameBloc>().add(const SwipedDown()),
+          }
+        else if (details.primaryVelocity != null &&
+            details.primaryVelocity! < 0.0)
+          {
+            context.read<GameBloc>().add(const SwipedUp()),
+          }
+      },
+      child: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Card(
+            child: SizedBox(
+              height: 348,
+              width: 348,
+              child: TileGrid(),
+            ),
           ),
-        ),
-        ActionsRow(),
-      ],
+          ActionsRow(),
+        ],
+      ),
     );
   }
 }
