@@ -2,25 +2,33 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 
-sealed class GameState extends Equatable {
-  GameBoard gameBoard;
+typedef Grid<T> = List<List<T>>;
 
-  GameState(this.gameBoard);
+extension GridCopying on Grid {
+  Grid<T> copy<T>() {
+    return map((row) => List<T>.from(row)).toList();
+  }
+}
+
+sealed class GameState extends Equatable {
+  final GameBoard gameBoard;
+
+  const GameState(this.gameBoard);
 
   @override
   List<Object> get props => [gameBoard];
 }
 
 final class GameNew extends GameState {
-  GameNew(super.gameBoard);
+  const GameNew(super.gameBoard);
 }
 
 final class GameRunning extends GameState {
-  GameRunning(super.gameBoard);
+  const GameRunning(super.gameBoard);
 }
 
 final class GameOver extends GameState {
-  GameOver(super.gameBoard);
+  const GameOver(super.gameBoard);
 }
 
 class GameBoard extends Equatable {
@@ -44,20 +52,33 @@ class GameBoard extends Equatable {
     (3, 3)
   ];
   static final _random = Random();
+  static const emptyGrid = [
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null],
+    [null, null, null, null]
+  ];
 
-  GameBoard();
+  const GameBoard(this.grid);
+  const GameBoard.fresh() : grid = emptyGrid;
 
-  List<List<int?>> grid =
-      List<List<int?>>.filled(4, List<int?>.filled(4, null));
+  final Grid<int?> grid;
 
   @override
   List<Object?> get props => [grid];
 
-  void addTwo() {
+  GameBoard addTwo() {
+    Grid<int?> newGrid = grid.copy();
     final emptyCoordinates =
-        coordinates.where((p) => grid[p.$1][p.$2] == null).toList();
+        coordinates.where((p) => newGrid[p.$1][p.$2] == null).toList();
     var selectedCoordinates =
         emptyCoordinates[_random.nextInt(emptyCoordinates.length)];
-    grid[selectedCoordinates.$1][selectedCoordinates.$2] = 2;
+    newGrid[selectedCoordinates.$1][selectedCoordinates.$2] = 2;
+
+    return GameBoard(newGrid);
+  }
+
+  GameBoard copy() {
+    return GameBoard(grid.copy());
   }
 }
