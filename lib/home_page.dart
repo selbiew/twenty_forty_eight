@@ -1,9 +1,13 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:twenty_forty_eight/game_bloc.dart';
-import 'package:twenty_forty_eight/game_event.dart';
-import 'package:twenty_forty_eight/game_state.dart';
+import 'package:twenty_forty_eight/bloc/game_bloc.dart';
+import 'package:twenty_forty_eight/bloc/game_event.dart';
+import 'package:twenty_forty_eight/bloc/game_state.dart';
+import 'package:twenty_forty_eight/constants.dart';
 
 class TwentyFortyEightHomePage extends StatelessWidget {
   const TwentyFortyEightHomePage({Key? key}) : super(key: key);
@@ -87,7 +91,8 @@ class NumberTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      // TODO: Color based on value
+      elevation: value != null ? 2 : 0,
+      color: value != null ? Constants.tileColors[value] : null,
       child: SizedBox(
         height: 72,
         width: 72,
@@ -95,7 +100,8 @@ class NumberTile extends StatelessWidget {
           child: Text(
             '${value ?? ''}',
             style: const TextStyle(
-              fontSize: 48,
+              fontSize: 18,
+              color: Colors.white,
             ),
           ),
         ),
@@ -113,25 +119,25 @@ class ActionsRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         OutlinedButton(
-          child: Text('New Game'),
+          child: const Text('New Game'),
           onPressed: () => {
-            context.read<GameBloc>().add(GameStarted()),
+            context.read<GameBloc>().add(const GameStarted()),
           },
         ),
         IconButton(
-          onPressed: () => context.read<GameBloc>().add(SwipedUp()),
+          onPressed: () => context.read<GameBloc>().add(const SwipedUp()),
           icon: const Icon(Icons.arrow_upward),
         ),
         IconButton(
-          onPressed: () => context.read<GameBloc>().add(SwipedDown()),
+          onPressed: () => context.read<GameBloc>().add(const SwipedDown()),
           icon: const Icon(Icons.arrow_downward),
         ),
         IconButton(
-          onPressed: () => context.read<GameBloc>().add(SwipedLeft()),
+          onPressed: () => context.read<GameBloc>().add(const SwipedLeft()),
           icon: const Icon(Icons.arrow_left),
         ),
         IconButton(
-          onPressed: () => context.read<GameBloc>().add(SwipedRight()),
+          onPressed: () => context.read<GameBloc>().add(const SwipedRight()),
           icon: const Icon(Icons.arrow_right),
         ),
       ],

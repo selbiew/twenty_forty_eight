@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:twenty_forty_eight/game_state.dart';
+import 'package:twenty_forty_eight/bloc/game_state.dart';
 
 void main() {
   test('Two gamestates with different gameboards arent equal', () {

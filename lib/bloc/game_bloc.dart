@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:twenty_forty_eight/game_event.dart';
-import 'package:twenty_forty_eight/game_state.dart';
+import 'package:twenty_forty_eight/bloc/game_event.dart';
+import 'package:twenty_forty_eight/bloc/game_state.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
   GameBloc(GameBoard gameBoard) : super(GameNew(gameBoard)) {
