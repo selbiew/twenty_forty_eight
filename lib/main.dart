@@ -11,12 +11,12 @@ class SimpleBlocObserver extends BlocObserver {
   @override
   void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
-    print('onChange() - ${bloc.runtimeType}: $change');
+    // print('onChange() - ${bloc.runtimeType}: $change');
   }
 
   @override
   void onEvent(Bloc bloc, Object? event) {
     super.onEvent(bloc, event);
-    print('onEvent() - event: $event state: ${bloc.state}');
+    // print('onEvent() - event: $event state: ${bloc.state}');
   }
 }

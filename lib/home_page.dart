@@ -57,7 +57,6 @@ class TileGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GameBloc, GameState>(builder: (context, state) {
-      print('TileGrid - build()');
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: state.gameBoard.grid.map((r) => TileRow(r)).toList(),
@@ -116,8 +115,7 @@ class ActionsRow extends StatelessWidget {
         OutlinedButton(
           child: Text('New Game'),
           onPressed: () => {
-            print('New Game Pressed'),
-            context.read<GameBloc>().add(GameStarted())
+            context.read<GameBloc>().add(GameStarted()),
           },
         ),
         IconButton(

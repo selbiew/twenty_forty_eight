@@ -3,8 +3,6 @@ import 'package:twenty_forty_eight/game_event.dart';
 import 'package:twenty_forty_eight/game_state.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
-  static const GameBoard _board = GameBoard.fresh();
-
   GameBloc(GameBoard gameBoard) : super(GameNew(gameBoard)) {
     on<GameStarted>(_onGameStarted);
     on<GameLost>(_onGameLost);
@@ -19,22 +17,22 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   }
 
   void _onGameLost(GameLost event, Emitter<GameState> emit) {
-    emit(GameOver(_board.copy()));
+    emit(GameOver(state.gameBoard));
   }
 
   void _onSwipedUp(SwipedUp event, Emitter<GameState> emit) {
-    emit(GameRunning(_board.copy()));
+    emit(GameRunning(state.gameBoard.swipe(Direction.up).addTwo()));
   }
 
   void _onSwipedDown(SwipedDown event, Emitter<GameState> emit) {
-    emit(GameRunning(_board.copy()));
+    emit(GameRunning(state.gameBoard.swipe(Direction.down).addTwo()));
   }
 
   void _onSwipedRight(SwipedRight event, Emitter<GameState> emit) {
-    emit(GameRunning(_board.copy()));
+    emit(GameRunning(state.gameBoard.swipe(Direction.right).addTwo()));
   }
 
   void _onSwipedLeft(SwipedLeft event, Emitter<GameState> emit) {
-    emit(GameRunning(_board.copy()));
+    emit(GameRunning(state.gameBoard.swipe(Direction.left).addTwo()));
   }
 }
