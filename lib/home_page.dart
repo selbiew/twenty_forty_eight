@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twenty_forty_eight/bloc/game_bloc.dart';
@@ -28,9 +25,32 @@ class GameView extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: TwentyFortyEightBoardView(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ScoreWidget(),
+            TwentyFortyEightBoardView(),
+            ActionsRow(),
+          ],
+        ),
       ),
     );
+  }
+}
+
+class ScoreWidget extends StatelessWidget {
+  const ScoreWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<GameBloc, GameState>(builder: (context, state) {
+      return Center(
+        child: Text(
+          '${state.gameBoard.score}',
+          style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+        ),
+      );
+    });
   }
 }
 
@@ -72,7 +92,6 @@ class TwentyFortyEightBoardView extends StatelessWidget {
               child: TileGrid(),
             ),
           ),
-          ActionsRow(),
         ],
       ),
     );
@@ -139,32 +158,19 @@ class ActionsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        OutlinedButton(
-          child: const Text('New Game'),
-          onPressed: () => {
-            context.read<GameBloc>().add(const GameStarted()),
-          },
-        ),
-        IconButton(
-          onPressed: () => context.read<GameBloc>().add(const SwipedUp()),
-          icon: const Icon(Icons.arrow_upward),
-        ),
-        IconButton(
-          onPressed: () => context.read<GameBloc>().add(const SwipedDown()),
-          icon: const Icon(Icons.arrow_downward),
-        ),
-        IconButton(
-          onPressed: () => context.read<GameBloc>().add(const SwipedLeft()),
-          icon: const Icon(Icons.arrow_left),
-        ),
-        IconButton(
-          onPressed: () => context.read<GameBloc>().add(const SwipedRight()),
-          icon: const Icon(Icons.arrow_right),
-        ),
-      ],
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          OutlinedButton(
+            child: const Text('New Game'),
+            onPressed: () => {
+              context.read<GameBloc>().add(const GameStarted()),
+            },
+          ),
+        ],
+      ),
     );
   }
 }

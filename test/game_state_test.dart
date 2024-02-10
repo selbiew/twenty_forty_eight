@@ -3,7 +3,7 @@ import 'package:twenty_forty_eight/bloc/game_state.dart';
 
 void main() {
   test('Two gamestates with different gameboards arent equal', () {
-    final gb1 = GameBoard();
+    final gb1 = const GameBoard.fresh();
     final GameState gs1 = GameNew(gb1);
     gb1.addTwo();
     final GameState gs2 = GameNew(gb1);

@@ -72,10 +72,13 @@ class GameBoard extends Equatable {
     [null, null, null, null]
   ];
 
-  const GameBoard(this.grid);
-  const GameBoard.fresh() : grid = emptyGrid;
+  const GameBoard(this.grid, this.score);
+  const GameBoard.fresh()
+      : grid = emptyGrid,
+        score = 0;
 
   final Grid<int?> grid;
+  final int score;
 
   @override
   List<Object?> get props => [grid];
@@ -136,6 +139,7 @@ class GameBoard extends Equatable {
 
   GameBoard swipe(Direction direction) {
     Grid<int?> newGrid = grid.copy();
+    int newScore = score;
     switch (direction) {
       case Direction.left || Direction.up:
         for (int i = 0; i < 4; i++) {
@@ -149,6 +153,7 @@ class GameBoard extends Equatable {
             }
 
             if (_canMerge(r, c, direction, newGrid)) {
+              newScore += newGrid[r][c]! * 2;
               _merge(r, c, direction, newGrid);
             }
           }
@@ -190,7 +195,7 @@ class GameBoard extends Equatable {
         break;
     }
 
-    return GameBoard(newGrid);
+    return GameBoard(newGrid, newScore);
   }
 
   GameBoard addTwo() {
@@ -201,10 +206,10 @@ class GameBoard extends Equatable {
         emptyCoordinates[_random.nextInt(emptyCoordinates.length)];
     newGrid[selectedCoordinates.$1][selectedCoordinates.$2] = 2;
 
-    return GameBoard(newGrid);
+    return GameBoard(newGrid, score);
   }
 
   GameBoard copy() {
-    return GameBoard(grid.copy());
+    return GameBoard(grid.copy(), score);
   }
 }
