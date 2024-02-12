@@ -1,3 +1,5 @@
+import 'package:twenty_forty_eight/bloc/game_state.dart';
+
 sealed class GameEvent {
   const GameEvent();
 }
@@ -10,18 +12,8 @@ final class GameLost extends GameEvent {
   const GameLost();
 }
 
-final class SwipedUp extends GameEvent {
-  const SwipedUp();
-}
+final class Swiped extends GameEvent {
+  const Swiped(this.direction);
 
-final class SwipedDown extends GameEvent {
-  const SwipedDown();
-}
-
-final class SwipedLeft extends GameEvent {
-  const SwipedLeft();
-}
-
-final class SwipedRight extends GameEvent {
-  const SwipedRight();
+  final Direction direction;
 }

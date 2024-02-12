@@ -187,23 +187,23 @@ class GameRunningView extends StatelessWidget {
       onHorizontalDragEnd: (details) => {
         if (details.primaryVelocity != null && details.primaryVelocity! > 0.0)
           {
-            context.read<GameBloc>().add(const SwipedRight()),
+            context.read<GameBloc>().add(const Swiped(Direction.right)),
           }
         else if (details.primaryVelocity != null &&
             details.primaryVelocity! < 0.0)
           {
-            context.read<GameBloc>().add(const SwipedLeft()),
+            context.read<GameBloc>().add(const Swiped(Direction.left)),
           }
       },
       onVerticalDragEnd: (details) => {
         if (details.primaryVelocity != null && details.primaryVelocity! > 0.0)
           {
-            context.read<GameBloc>().add(const SwipedDown()),
+            context.read<GameBloc>().add(const Swiped(Direction.down)),
           }
         else if (details.primaryVelocity != null &&
             details.primaryVelocity! < 0.0)
           {
-            context.read<GameBloc>().add(const SwipedUp()),
+            context.read<GameBloc>().add(const Swiped(Direction.up)),
           }
       },
       child: const Column(
