@@ -18,7 +18,10 @@ void main() {
       [4, 2, 16, 8],
       [8, 16, 2, 4],
       [16, 8, 4, 2]
-    ], 0);
-    return expect(gb1.isGameOver(), true);
+    ], 0, false);
+    return expect(
+      gb1.isGameLost(),
+      true,
+    );
   });
 }

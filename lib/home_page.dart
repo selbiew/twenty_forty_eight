@@ -65,8 +65,10 @@ class TwentyFortyEightBoardView extends StatelessWidget {
           child: GameRunningView(),
         ),
       ];
-      if (context.read<GameBloc>().state.runtimeType == GameOver) {
-        children.add(const Center(child: GameOverView()));
+      if (context.read<GameBloc>().state.runtimeType == GameLost) {
+        children.add(const Center(child: GameOverView(text: 'You lost!')));
+      } else if (context.read<GameBloc>().state.runtimeType == GameWon) {
+        children.add(const Center(child: GameOverView(text: 'You won!')));
       }
       return Stack(
         children: children,
@@ -153,22 +155,25 @@ class ActionsRow extends StatelessWidget {
 }
 
 class GameOverView extends StatelessWidget {
-  const GameOverView({Key? key}) : super(key: key);
+  const GameOverView({required this.text, Key? key}) : super(key: key);
+
+  final String text;
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Card(
-          color: Color.fromRGBO(50, 50, 0, 0.05),
+          color: const Color.fromRGBO(50, 50, 0, 0.05),
           child: SizedBox(
             height: 348,
             width: 348,
             child: Center(
               child: Text(
-                'You Lost!',
-                style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                text,
+                style:
+                    const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
               ),
             ),
           ),

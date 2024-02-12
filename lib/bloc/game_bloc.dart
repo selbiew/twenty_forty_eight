@@ -17,8 +17,10 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     if (newBoard != state.gameBoard) {
       newBoard = newBoard.addTwo();
     }
-    if (newBoard.isGameOver()) {
-      emit(GameOver(newBoard));
+    if (newBoard.isGameLost()) {
+      emit(GameLost(newBoard));
+    } else if (newBoard.isGameWon) {
+      emit(GameWon(newBoard));
     } else {
       emit(GameRunning(newBoard));
     }

@@ -40,8 +40,12 @@ final class GameRunning extends GameState {
   const GameRunning(super.gameBoard);
 }
 
-final class GameOver extends GameState {
-  const GameOver(super.gameBoard);
+final class GameLost extends GameState {
+  const GameLost(super.gameBoard);
+}
+
+final class GameWon extends GameState {
+  const GameWon(super.gameBoard);
 }
 
 class GameBoard extends Equatable {
@@ -117,18 +121,20 @@ class GameBoard extends Equatable {
 
   static final _random = Random();
 
-  const GameBoard(this.grid, this.score);
+  const GameBoard(this.grid, this.score, this.isGameWon);
   const GameBoard.fresh()
       : grid = _emptyGrid,
-        score = 0;
+        score = 0,
+        isGameWon = false;
 
   final Grid<int?> grid;
   final int score;
+  final bool isGameWon;
 
   @override
   List<Object?> get props => [grid];
 
-  bool isGameOver() {
+  bool isGameLost() {
     return _coordinates
         .every((record) => _hasNoMoves(record.$1, record.$2, grid));
   }
@@ -217,6 +223,7 @@ class GameBoard extends Equatable {
   GameBoard swipe(Direction direction) {
     Grid<int?> newGrid = grid.copy();
     int newScore = score;
+    bool isGameWon = false;
     List<(int, int)> tileMoveCheckOrder = _tileMoveCheckOrders[direction]!;
     for ((int, int) record in tileMoveCheckOrder) {
       int r = record.$1;
@@ -228,12 +235,15 @@ class GameBoard extends Equatable {
       }
 
       if (_canMerge(r, c, direction, newGrid)) {
+        if (newGrid[r][c]! == 1024) {
+          isGameWon = true;
+        }
         newScore += newGrid[r][c]! * 2;
         _merge(r, c, direction, newGrid);
       }
     }
 
-    return GameBoard(newGrid, newScore);
+    return GameBoard(newGrid, newScore, isGameWon);
   }
 
   GameBoard addTwo() {
@@ -244,10 +254,10 @@ class GameBoard extends Equatable {
         emptyCoordinates[_random.nextInt(emptyCoordinates.length)];
     newGrid[selectedCoordinates.$1][selectedCoordinates.$2] = 2;
 
-    return GameBoard(newGrid, score);
+    return GameBoard(newGrid, score, isGameWon);
   }
 
   GameBoard copy() {
-    return GameBoard(grid.copy(), score);
+    return GameBoard(grid.copy(), score, isGameWon);
   }
 }
