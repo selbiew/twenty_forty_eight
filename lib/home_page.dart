@@ -12,7 +12,7 @@ class TwentyFortyEightHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => GameBloc(const GameBoard.fresh()),
+      create: (_) => GameBloc(const GameBoard.fresh().addTwo()),
       child: const GameView(),
     );
   }

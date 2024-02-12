@@ -40,14 +40,13 @@ final class GameRunning extends GameState {
   const GameRunning(super.gameBoard);
 }
 
-// TODO: REname GameLost Event or GameOver state, too similar
 final class GameOver extends GameState {
   const GameOver(super.gameBoard);
 }
 
 class GameBoard extends Equatable {
   // Row, column where 0,0 is the top left of the 4x4 grid.
-  static const coordinates = [
+  static const _coordinates = [
     (0, 0),
     (0, 1),
     (0, 2),
@@ -65,17 +64,62 @@ class GameBoard extends Equatable {
     (3, 2),
     (3, 3)
   ];
-  static final _random = Random();
-  static const emptyGrid = [
+  static const _emptyGrid = [
     [null, null, null, null],
     [null, null, null, null],
     [null, null, null, null],
     [null, null, null, null]
   ];
+  // We check the tiles in different directions based on the direction of the swipe.
+  static const Map<Direction, List<(int, int)>> _tileMoveCheckOrders = {
+    // Left to Right, Top to Bottom
+    Direction.up: _coordinates,
+    Direction.left: _coordinates,
+    // Left to Right, Bottom to Top
+    Direction.down: [
+      (3, 0),
+      (3, 1),
+      (3, 2),
+      (3, 3),
+      (2, 0),
+      (2, 1),
+      (2, 2),
+      (2, 3),
+      (1, 0),
+      (1, 1),
+      (1, 2),
+      (1, 3),
+      (0, 0),
+      (0, 1),
+      (0, 2),
+      (0, 3),
+    ],
+    // Right to Left, Top to Bottom
+    Direction.right: [
+      (0, 3),
+      (0, 2),
+      (0, 1),
+      (0, 0),
+      (1, 3),
+      (1, 2),
+      (1, 1),
+      (1, 0),
+      (2, 3),
+      (2, 2),
+      (2, 1),
+      (2, 0),
+      (3, 3),
+      (3, 2),
+      (3, 1),
+      (3, 0)
+    ],
+  };
+
+  static final _random = Random();
 
   const GameBoard(this.grid, this.score);
   const GameBoard.fresh()
-      : grid = emptyGrid,
+      : grid = _emptyGrid,
         score = 0;
 
   final Grid<int?> grid;
@@ -85,7 +129,7 @@ class GameBoard extends Equatable {
   List<Object?> get props => [grid];
 
   bool isGameOver() {
-    return coordinates
+    return _coordinates
         .every((record) => _hasNoMoves(record.$1, record.$2, grid));
   }
 
@@ -170,65 +214,23 @@ class GameBoard extends Equatable {
     return (newRow >= 0 && newRow <= 3) && (newColumn >= 0 && newColumn <= 3);
   }
 
-  // TODO: Clean up code
   GameBoard swipe(Direction direction) {
     Grid<int?> newGrid = grid.copy();
     int newScore = score;
-    switch (direction) {
-      case Direction.left || Direction.up:
-        for (int i = 0; i < 4; i++) {
-          for (int j = 0; j < 4; j++) {
-            int r = i;
-            int c = j;
-            while (_canMove(r, c, direction, newGrid)) {
-              _swap(r, c, direction, newGrid);
-              r = r + direction.y;
-              c = c + direction.x;
-            }
+    List<(int, int)> tileMoveCheckOrder = _tileMoveCheckOrders[direction]!;
+    for ((int, int) record in tileMoveCheckOrder) {
+      int r = record.$1;
+      int c = record.$2;
+      while (_canMove(r, c, direction, newGrid)) {
+        _swap(r, c, direction, newGrid);
+        r = r + direction.y;
+        c = c + direction.x;
+      }
 
-            if (_canMerge(r, c, direction, newGrid)) {
-              newScore += newGrid[r][c]! * 2;
-              _merge(r, c, direction, newGrid);
-            }
-          }
-        }
-        break;
-      case Direction.down:
-        for (int i = 3; i >= 0; i--) {
-          for (int j = 0; j < 4; j++) {
-            int r = i;
-            int c = j;
-            while (_canMove(r, c, direction, newGrid)) {
-              _swap(r, c, direction, newGrid);
-              r = r + direction.y;
-              c = c + direction.x;
-            }
-
-            if (_canMerge(r, c, direction, newGrid)) {
-              newScore += newGrid[r][c]! * 2;
-              _merge(r, c, direction, newGrid);
-            }
-          }
-        }
-        break;
-      case Direction.right:
-        for (int i = 0; i < 4; i++) {
-          for (int j = 3; j >= 0; j--) {
-            int r = i;
-            int c = j;
-            while (_canMove(r, c, direction, newGrid)) {
-              _swap(r, c, direction, newGrid);
-              r = r + direction.y;
-              c = c + direction.x;
-            }
-
-            if (_canMerge(r, c, direction, newGrid)) {
-              newScore += newGrid[r][c]! * 2;
-              _merge(r, c, direction, newGrid);
-            }
-          }
-        }
-        break;
+      if (_canMerge(r, c, direction, newGrid)) {
+        newScore += newGrid[r][c]! * 2;
+        _merge(r, c, direction, newGrid);
+      }
     }
 
     return GameBoard(newGrid, newScore);
@@ -237,7 +239,7 @@ class GameBoard extends Equatable {
   GameBoard addTwo() {
     Grid<int?> newGrid = grid.copy();
     final emptyCoordinates =
-        coordinates.where((p) => newGrid[p.$1][p.$2] == null).toList();
+        _coordinates.where((p) => newGrid[p.$1][p.$2] == null).toList();
     var selectedCoordinates =
         emptyCoordinates[_random.nextInt(emptyCoordinates.length)];
     newGrid[selectedCoordinates.$1][selectedCoordinates.$2] = 2;

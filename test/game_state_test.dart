@@ -4,10 +4,10 @@ import 'package:twenty_forty_eight/bloc/game_state.dart';
 void main() {
   // TODO: Add actual tests
   test('Two gamestates with different gameboards arent equal', () {
-    final gb1 = const GameBoard.fresh();
-    final GameState gs1 = GameNew(gb1);
+    const gb1 = GameBoard.fresh();
+    const GameState gs1 = GameNew(gb1);
     gb1.addTwo();
-    final GameState gs2 = GameNew(gb1);
+    const GameState gs2 = GameNew(gb1);
 
     expect(gs1, gs2);
   });
