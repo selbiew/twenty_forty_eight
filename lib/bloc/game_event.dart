@@ -8,10 +8,6 @@ final class GameStarted extends GameEvent {
   const GameStarted();
 }
 
-final class GameLost extends GameEvent {
-  const GameLost();
-}
-
 final class Swiped extends GameEvent {
   const Swiped(this.direction);
 

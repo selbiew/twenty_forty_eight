@@ -5,7 +5,6 @@ import 'package:twenty_forty_eight/bloc/game_state.dart';
 class GameBloc extends Bloc<GameEvent, GameState> {
   GameBloc(GameBoard gameBoard) : super(GameNew(gameBoard)) {
     on<GameStarted>(_onGameStarted);
-    on<GameLost>(_onGameLost);
     on<Swiped>(_onSwiped);
   }
 
@@ -13,11 +12,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     emit(GameRunning(const GameBoard.fresh().addTwo()));
   }
 
-  void _onGameLost(GameLost event, Emitter<GameState> emit) {
-    emit(GameOver(state.gameBoard));
-  }
-
-  // TODO: Include a direciton field for swipe event so then reduce to _onSwipe
   void _onSwiped(Swiped event, Emitter<GameState> emit) {
     GameBoard newBoard = state.gameBoard.swipe(event.direction);
     if (newBoard != state.gameBoard) {
