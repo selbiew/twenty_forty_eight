@@ -40,6 +40,7 @@ final class GameRunning extends GameState {
   const GameRunning(super.gameBoard);
 }
 
+// TODO: REname GameLost Event or GameOver state, too similar
 final class GameOver extends GameState {
   const GameOver(super.gameBoard);
 }
@@ -82,6 +83,38 @@ class GameBoard extends Equatable {
 
   @override
   List<Object?> get props => [grid];
+
+  bool isGameOver() {
+    return coordinates
+        .every((record) => _hasNoMoves(record.$1, record.$2, grid));
+  }
+
+  bool _hasNoMoves(int row, int column, Grid<int?> grid) {
+    int? currentValue = grid[row][column];
+    if (currentValue != null) {
+      return _adjacentCoordinates(row, column).every((record) =>
+          grid[record.$1][record.$2] != null ||
+          currentValue != grid[record.$1][record.$2]);
+    }
+
+    return false;
+  }
+
+  Set<(int, int)> _adjacentCoordinates(int row, int column) {
+    return {
+      (row - 1, column - 1),
+      (row - 1, column),
+      (row - 1, column + 1),
+      (row, column - 1),
+      (row, column + 1),
+      (row + 1, column - 1),
+      (row + 1, column),
+      (row + 1, column + 1)
+    }
+        .where((record) =>
+            0 <= record.$1 && record.$1 < 4 && 0 <= record.$2 && record.$2 < 4)
+        .toSet();
+  }
 
   bool _canMerge(int row, int column, Direction direction, Grid<int?> grid) {
     if (grid[row][column] != null &&
@@ -137,6 +170,7 @@ class GameBoard extends Equatable {
     return (newRow >= 0 && newRow <= 3) && (newColumn >= 0 && newColumn <= 3);
   }
 
+  // TODO: Clean up code
   GameBoard swipe(Direction direction) {
     Grid<int?> newGrid = grid.copy();
     int newScore = score;
@@ -171,6 +205,7 @@ class GameBoard extends Equatable {
             }
 
             if (_canMerge(r, c, direction, newGrid)) {
+              newScore += newGrid[r][c]! * 2;
               _merge(r, c, direction, newGrid);
             }
           }
@@ -188,6 +223,7 @@ class GameBoard extends Equatable {
             }
 
             if (_canMerge(r, c, direction, newGrid)) {
+              newScore += newGrid[r][c]! * 2;
               _merge(r, c, direction, newGrid);
             }
           }

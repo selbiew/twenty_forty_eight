@@ -59,42 +59,19 @@ class TwentyFortyEightBoardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onHorizontalDragEnd: (details) => {
-        if (details.primaryVelocity != null && details.primaryVelocity! > 0.0)
-          {
-            context.read<GameBloc>().add(const SwipedRight()),
-          }
-        else if (details.primaryVelocity != null &&
-            details.primaryVelocity! < 0.0)
-          {
-            context.read<GameBloc>().add(const SwipedLeft()),
-          }
-      },
-      onVerticalDragEnd: (details) => {
-        if (details.primaryVelocity != null && details.primaryVelocity! > 0.0)
-          {
-            context.read<GameBloc>().add(const SwipedDown()),
-          }
-        else if (details.primaryVelocity != null &&
-            details.primaryVelocity! < 0.0)
-          {
-            context.read<GameBloc>().add(const SwipedUp()),
-          }
-      },
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Card(
-            child: SizedBox(
-              height: 348,
-              width: 348,
-              child: TileGrid(),
-            ),
-          ),
-        ],
-      ),
-    );
+    return BlocBuilder<GameBloc, GameState>(builder: (context, state) {
+      List<Widget> children = [
+        const Center(
+          child: GameRunningView(),
+        ),
+      ];
+      if (context.read<GameBloc>().state.runtimeType == GameOver) {
+        children.add(const Center(child: GameOverView()));
+      }
+      return Stack(
+        children: children,
+      );
+    });
   }
 }
 
@@ -168,6 +145,76 @@ class ActionsRow extends StatelessWidget {
             onPressed: () => {
               context.read<GameBloc>().add(const GameStarted()),
             },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class GameOverView extends StatelessWidget {
+  const GameOverView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Card(
+          color: Color.fromRGBO(50, 50, 0, 0.05),
+          child: SizedBox(
+            height: 348,
+            width: 348,
+            child: Center(
+              child: Text(
+                'You Lost!',
+                style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class GameRunningView extends StatelessWidget {
+  const GameRunningView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onHorizontalDragEnd: (details) => {
+        if (details.primaryVelocity != null && details.primaryVelocity! > 0.0)
+          {
+            context.read<GameBloc>().add(const SwipedRight()),
+          }
+        else if (details.primaryVelocity != null &&
+            details.primaryVelocity! < 0.0)
+          {
+            context.read<GameBloc>().add(const SwipedLeft()),
+          }
+      },
+      onVerticalDragEnd: (details) => {
+        if (details.primaryVelocity != null && details.primaryVelocity! > 0.0)
+          {
+            context.read<GameBloc>().add(const SwipedDown()),
+          }
+        else if (details.primaryVelocity != null &&
+            details.primaryVelocity! < 0.0)
+          {
+            context.read<GameBloc>().add(const SwipedUp()),
+          }
+      },
+      child: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Card(
+            child: SizedBox(
+              height: 348,
+              width: 348,
+              child: TileGrid(),
+            ),
           ),
         ],
       ),

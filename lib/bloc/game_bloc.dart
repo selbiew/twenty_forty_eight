@@ -20,12 +20,17 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     emit(GameOver(state.gameBoard));
   }
 
+  // TODO: Include a direciton field for swipe event so then reduce to _onSwipe
   void _onSwipedUp(SwipedUp event, Emitter<GameState> emit) {
     GameBoard newBoard = state.gameBoard.swipe(Direction.up);
     if (newBoard != state.gameBoard) {
       newBoard = newBoard.addTwo();
     }
-    emit(GameRunning(newBoard));
+    if (newBoard.isGameOver()) {
+      emit(GameOver(newBoard));
+    } else {
+      emit(GameRunning(newBoard));
+    }
   }
 
   void _onSwipedDown(SwipedDown event, Emitter<GameState> emit) {
@@ -33,7 +38,11 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     if (newBoard != state.gameBoard) {
       newBoard = newBoard.addTwo();
     }
-    emit(GameRunning(newBoard));
+    if (newBoard.isGameOver()) {
+      emit(GameOver(newBoard));
+    } else {
+      emit(GameRunning(newBoard));
+    }
   }
 
   void _onSwipedRight(SwipedRight event, Emitter<GameState> emit) {
@@ -41,7 +50,11 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     if (newBoard != state.gameBoard) {
       newBoard = newBoard.addTwo();
     }
-    emit(GameRunning(newBoard));
+    if (newBoard.isGameOver()) {
+      emit(GameOver(newBoard));
+    } else {
+      emit(GameRunning(newBoard));
+    }
   }
 
   void _onSwipedLeft(SwipedLeft event, Emitter<GameState> emit) {
@@ -49,6 +62,10 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     if (newBoard != state.gameBoard) {
       newBoard = newBoard.addTwo();
     }
-    emit(GameRunning(newBoard));
+    if (newBoard.isGameOver()) {
+      emit(GameOver(newBoard));
+    } else {
+      emit(GameRunning(newBoard));
+    }
   }
 }
