@@ -136,15 +136,15 @@ class GameBoard extends Equatable {
 
   bool isGameLost() {
     return _coordinates
-        .every((record) => _hasNoMoves(record.$1, record.$2, grid));
+        .every((record) => !_hasMoves(record.$1, record.$2, grid));
   }
 
-  bool _hasNoMoves(int row, int column, Grid<int?> grid) {
+  bool _hasMoves(int row, int column, Grid<int?> grid) {
     int? currentValue = grid[row][column];
     if (currentValue != null) {
-      return _adjacentCoordinates(row, column).every((record) =>
-          grid[record.$1][record.$2] != null ||
-          currentValue != grid[record.$1][record.$2]);
+      return _adjacentCoordinates(row, column).any((record) =>
+          grid[record.$1][record.$2] == null ||
+          currentValue == grid[record.$1][record.$2]);
     }
 
     return false;
@@ -152,14 +152,10 @@ class GameBoard extends Equatable {
 
   Set<(int, int)> _adjacentCoordinates(int row, int column) {
     return {
-      (row - 1, column - 1),
       (row - 1, column),
-      (row - 1, column + 1),
       (row, column - 1),
       (row, column + 1),
-      (row + 1, column - 1),
       (row + 1, column),
-      (row + 1, column + 1)
     }
         .where((record) =>
             0 <= record.$1 && record.$1 < 4 && 0 <= record.$2 && record.$2 < 4)
